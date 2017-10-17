@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<ruleset name="Hystrix"
+    xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+    Hystrix rule set
+    </description>
+    <rule name="HystrixFallbackCheck"
+          message="Find Hystrix Command without Fallback"
+          class="org.ksarch.pmd.HystrixFallbackCheck">
+      <description>
+      Avoid using HystrixCommand without Fallback
+      </description>
+        <priority>3</priority>
+ 
+      <example>
+<![CDATA[
+    public class HelloWorldCommand extends HystrixCommand<String> {
+        public HelloWorldCommand(String name) {
+            super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("HelloWorldGroup"))
+                .andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionIsolationThreadTimeoutInMilliseconds(500)));
+            this.name = name;
+        }
+
+        @Override
+        protected String getFallback() {
+            return "exeucute Falled";
+        }
+    }
+]]>
+      </example>
+    </rule>
+
+    <rule name="HystrixAnnotationFallbackCheck"
+          message="Find Hystrix Annotataion without Fallback"
+          class="org.ksarch.pmd.HystrixAnnotationFallbackCheck">
+        <description>
+        Avoid using Hystrix Annotation without Fallback
+        </description>
+        <priority>3</priority>
+
+        <example>
+<![CDATA[
+public class HelloService {
+    @Autowired
+    RestTemplate restTemplate;
+
+    @HystrixCommand(fallbackMethod = "hiError")
+    public String hiService(String name) {
+        return restTemplate.getForObject("http://SERVICE-HI/hi?name="+name,String.class);
+    }
+
+    public String hiError(String name) {
+        return "hi,"+name+",sorry,error!";
+    }
+}
+
+@FeignClient(value = "service-hi",fallback = SchedualServiceHiHystric.class)
+public interface SchedualServiceHi {
+    @RequestMapping(value = "/hi",method = RequestMethod.GET)
+    String sayHiFromClientOne(@RequestParam(value = "name") String name);
+}
+]]>
+        </example>
+    </rule>
+</ruleset>

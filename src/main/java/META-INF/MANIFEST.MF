@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+Class-Path: pmd-core-5.8.1.jar asm-5.0.4.jar saxon-9.1.0.8.jar gson-2.
+ 5.jar commons-lang3-3.4.jar jcommander-1.48.jar pmd-java-5.8.1.jar co
+ mmons-io-2.4.jar jaxen-1.1.6.jar javacc-5.0.jar saxon-9.1.0.8-dom.jar
+Main-Class: 
+
